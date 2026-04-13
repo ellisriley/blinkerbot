@@ -9,6 +9,7 @@
   "author": "riley@ellisnet.me",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.26.2"
+    "discord.js": "^14.26.2",
+    "mysql": "^2.18.1"
   }
 }
