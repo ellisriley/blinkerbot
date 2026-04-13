@@ -1,0 +1,14 @@
+{
+  "name": "blinkerbot",
+  "version": "1.0.0",
+  "description": "blinker counter bot for smonk 2.1",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "author": "riley@ellisnet.me",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.26.2"
+  }
+}
