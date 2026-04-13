@@ -13,7 +13,7 @@ module.exports = {
 		console.log(record);
 		if (record.length===0) {
 			await db.query("INSERT INTO scores (userId, score) VALUES (\""+userId+"\",1);");
-			await interaction.reply("New competetor! "+interaction.user.nickname+ " has joined");
+			await interaction.reply("New competetor! "+interaction.user.displayName+ " has joined");
 		} else {
 			await db.query("UPDATE scores SET score = score +1 WHERE userId= \""+userId+"\";");
 			await interaction.reply(interaction.user.displayName +"'s blinkers: "+(record[0].score+1));

@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 
 const db = {
     /* don't expose password or any sensitive info, done only for demo */
-    host: "192.168.64.43",
+    host: "127.0.0.1",
     user: "blinky",
     password: "password",
     database: "blinkerbot",
