@@ -2,6 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { token } = require('./config.json');
+//const db = require("./db.js")
+
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 console.log("Starting");
@@ -10,6 +12,7 @@ client.once(Events.ClientReady, (readyClient) => {
 });
 
 client.commands = new Collection(); 
+
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
@@ -28,6 +31,7 @@ for (const folder of commandFolders) {
 		}
 	}
 }
+
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return; 
