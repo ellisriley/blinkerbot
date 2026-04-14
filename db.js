@@ -1,13 +1,6 @@
 const mysql = require('mysql2/promise');
 
-const db = {
-    /* don't expose password or any sensitive info, done only for demo */
-    host: "127.0.0.1",
-    user: "blinky",
-    password: "password",
-    database: "blinkerbot",
-    connectTimeout: 60000
-  };
+const db = require("db.json")
 
 async function query(sql, params) {
   const connection = await mysql.createConnection(db);
