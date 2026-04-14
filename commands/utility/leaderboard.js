@@ -34,7 +34,7 @@ module.exports = {
             let displayName = await getMemberDisplayNameFromId(interaction, records[record].userId);
             //console.log("User ID from record is " + records[record].userId);
             //console.log("Display name : " + displayName);
-            response = response + record + ". " + displayName + " : " + records[record].score + "\n"; 
+            response = response + record + ". " + displayName + ": " + records[record].score + " blinkers\n"; 
         }
         await interaction.reply(response);
     },
