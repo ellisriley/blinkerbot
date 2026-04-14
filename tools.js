@@ -6,8 +6,7 @@ async function getMemberDisplayNameFromId(interaction, userId) {
         return undefined;
     }
   
-    let member = interaction.guild.members.cache.get(userId);
-    console.log("getting user");
+    let member = await interaction.guild.members.cache.get(userId);
     if (!member) {
       try {
         member = await interaction.guild.members.fetch(userId);
@@ -19,5 +18,6 @@ async function getMemberDisplayNameFromId(interaction, userId) {
     
     return member?.displayName ?? member?.user?.username;
 }
+
 
 module.exports = {getMemberDisplayNameFromId}
