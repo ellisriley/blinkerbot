@@ -9,11 +9,8 @@ async function getMemberDisplayNameFromId(interaction, userId) {
     }
   
     let member = await interaction.guild.members.cache.get(userId);
-    //console.log(userId);
-    //console.log("getting user " + member + " with id " + userId);
     if (!member) {
       try {
-        //console.log("member is" + member);
         member = await interaction.guild.members.fetch(userId);
         
       } catch {
@@ -29,11 +26,8 @@ module.exports = {
     async execute(interaction) {
         const records = await db.query("SELECT * FROM scores ORDER BY score DESC LIMIT 3;");
         let response = "";
-        console.log(records);
         for (record in records) {
             let displayName = await getMemberDisplayNameFromId(interaction, records[record].userId);
-            //console.log("User ID from record is " + records[record].userId);
-            //console.log("Display name : " + displayName);
             response = response + record + ". " + displayName + ": " + records[record].score + " blinkers\n"; 
         }
         await interaction.reply(response);
