@@ -10,7 +10,7 @@ module.exports = {
         let response = "";
         for (record in records) {
             let displayName = await tools.getMemberDisplayNameFromId(interaction, records[record].userId);
-            response = response + record + ". " + displayName + ": " + records[record].score + " blinkers\n"; 
+            response = response + record + ". " + displayName + ": " + records[record].blinkers + " blinkers\n"; 
         }
         await interaction.reply(response);
     },

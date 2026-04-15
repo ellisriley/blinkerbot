@@ -6,23 +6,24 @@ module.exports = {
 	data: new SlashCommandBuilder().setName('blinker').setDescription('log a blinker with blinkerbot !!'),
 	async execute(interaction) {
 		const userId = interaction.user.id;
-		const record = await db.query("SELECT score FROM scores WHERE userId=\""+userId+"\"");
 		const nickname = await tools.getMemberDisplayNameFromId(interaction, userId);
-		//console.log(record);
-		if (record.length===0) {
-			await db.query("INSERT INTO scores (userId, score) VALUES (\""+userId+"\",1);");
+		if (!await db.doesRecordExist(userId)) {
+			console.log("creating record");
+			await db.createRecord(userId);
+			await db.increment(userId, "blinkers");
 			await interaction.reply("New competetor! "+nickname+ " has joined");
 		} else {
-			await db.query("UPDATE scores SET score = score +1 WHERE userId= \""+userId+"\";");
-			if (record[0].score===24){
-				await interaction.reply(nickname + " is on their way to 100 fr. Current score: "+(record[0].score+1)+"\n @everyone");
-			} else if (record[0].score===49){
-				await interaction.reply("woah " + nickname+ " is halfway there! Current score: "+(record[0].score+1)+"\n @everyone");
-			} else if (record[0].score===99){
-				await interaction.reply("woah " + nickname+ " is halfway there! Current score: "+(record[0].score+1)+"\n @everyone");
+			const record = await db.getRecordByUserId(userId);
+			await db.increment(userId, "blinkers");
+			if (record[0].blinkers===24){
+				await interaction.reply(nickname + " is on their way to 100 fr. Current blinkers: "+(record[0].blinkers+1)+"\n @everyone");
+			} else if (record[0].blinkers===49){
+				await interaction.reply("woah " + nickname+ " is halfway there! Current blinkers: "+(record[0].blinkers+1)+"\n @everyone");
+			} else if (record[0].blinkers===99){
+				await interaction.reply("woah " + nickname+ " is halfway there! Current blinkers: "+(record[0].blinkers+1)+"\n @everyone");
 			} 
 			else {
-				await interaction.reply(nickname +" just hit a blinker! Current score: "+(record[0].score+1));
+				await interaction.reply(nickname +" just hit a blinker! Current score: "+(record[0].blinkers+1));
 			}
 		}
 	},
