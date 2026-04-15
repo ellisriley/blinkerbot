@@ -14,7 +14,16 @@ module.exports = {
 			await interaction.reply("New competetor! "+nickname+ " has joined");
 		} else {
 			await db.query("UPDATE scores SET score = score +1 WHERE userId= \""+userId+"\";");
-			await interaction.reply(nickname +" just hit a blinker! Current score: "+(record[0].score+1));
+			if (record[0].score===24){
+				await interaction.reply(nickname + " is on their way to 100 fr. Current score: "+(record[0].score+1)+"\n @everyone");
+			} else if (record[0].score===49){
+				await interaction.reply("woah " + nickname+ " is halfway there! Current score: "+(record[0].score+1)+"\n @everyone");
+			} else if (record[0].score===99){
+				await interaction.reply("woah " + nickname+ " is halfway there! Current score: "+(record[0].score+1)+"\n @everyone");
+			} 
+			else {
+				await interaction.reply(nickname +" just hit a blinker! Current score: "+(record[0].score+1));
+			}
 		}
 	},
 };
