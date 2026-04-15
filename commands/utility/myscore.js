@@ -7,7 +7,13 @@ module.exports = {
 	async execute(interaction) {
 		const userId = interaction.user.id;
         const nickname = await tools.getMemberDisplayNameFromId(interaction, userId);
-		const record = await db.query("SELECT score FROM scores WHERE userId=\""+userId+"\"");
-		await interaction.reply(nickname+ "'s current blinker count is " + record[0].score);
+		const record = await db.getRecordByUserId(userId);
+		let response = "";
+		response = response + "Blinkers: " + record[0].blinkers +"\n";
+		response = response + "Bongs: " + record[0].bongs +"\n";
+		response = response + "Joints: " + record[0].joints +"\n";
+		response = response + "Edibles: " + record[0].edibles +"\n";
+
+		await interaction.reply(response);
 	},
 };
