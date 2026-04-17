@@ -1,11 +1,11 @@
 const { GuildMember, CommandInteraction} = require('discord.js');
 
-const types = {
-  blinker="blinkers",
-  joint="joints",
-  bong="bongs",
-  edible="edible",
-  vape="vapes"
+const logTypes = {
+  blinker:"blinkers",
+  joint:"joints",
+  bong:"bongs",
+  edible:"edible",
+  vape:"vapes"
 };
 
 async function getMemberDisplayNameFromId(interaction, userId) {
@@ -28,4 +28,4 @@ async function getMemberDisplayNameFromId(interaction, userId) {
 }
 
 
-module.exports = {getMemberDisplayNameFromId}
+module.exports = {getMemberDisplayNameFromId, logTypes}
