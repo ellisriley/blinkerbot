@@ -8,13 +8,12 @@ module.exports = {
 		const userId = interaction.user.id;
 		const nickname = await tools.getMemberDisplayNameFromId(interaction, userId);
 		if (!await db.doesRecordExist(userId)) {
-			console.log("creating record");
 			await db.createRecord(userId);
-			await db.increment(userId, "blinkers");
+			await db.increment(userId, tools.logTypes.blinker);
 			await interaction.reply("New competetor! "+nickname+ " has joined");
 		} else {
 			const record = await db.getRecordByUserId(userId);
-			await db.increment(userId, "blinkers");
+			await db.increment(userId, tools.logTypes.blinker);
 			if (record[0].blinkers===24){
 				await interaction.reply(nickname + " is on their way to 100 fr. Current blinkers: "+(record[0].blinkers+1)+"\n @everyone");
 			} else if (record[0].blinkers===49){

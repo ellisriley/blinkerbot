@@ -8,13 +8,12 @@ module.exports = {
 			const userId = interaction.user.id;
 			const nickname = await tools.getMemberDisplayNameFromId(interaction, userId);
 			if (!await db.doesRecordExist(userId)) {
-				console.log("creating record");
 				await db.createRecord(userId);
-				await db.incrementByHalf(userId, "blinkers");
+				await db.incrementByHalf(userId, tools.logTypes.blinker);
 				await interaction.reply("New competetor! "+nickname+ " has joined");
 			} else {
 				const record = await db.getRecordByUserId(userId);
-				await db.incrementByHalf(userId, "blinkers");
+				await db.incrementByHalf(userId, tools.logTypes.blinker);
 				await interaction.reply(nickname +" just hit half a blinker! Current score: "+(record[0].blinkers+0.5));
 			}
 		},

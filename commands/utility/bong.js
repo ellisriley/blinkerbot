@@ -10,11 +10,11 @@ module.exports = {
 			if (!await db.doesRecordExist(userId)) {
 				console.log("creating record");
 				await db.createRecord(userId);
-				await db.increment(userId, "bongs");
+				await db.increment(userId, tools.logTypes.bong);
 				await interaction.reply("New competetor! "+nickname+ " has joined");
 			} else {
 				const record = await db.getRecordByUserId(userId);
-				await db.increment(userId, "bongs");
+				await db.increment(userId, tools.logTypes.bong);
 				await interaction.reply(nickname +" just ripped a bong! Current score: "+(record[0].bongs+1));
 			}
 		},
