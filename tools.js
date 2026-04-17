@@ -1,5 +1,13 @@
 const { GuildMember, CommandInteraction} = require('discord.js');
 
+const types = {
+  blinker="blinkers",
+  joint="joints",
+  bong="bongs",
+  edible="edible",
+  vape="vapes"
+};
+
 async function getMemberDisplayNameFromId(interaction, userId) {
     if (!interaction.guild) {
         console.log("No guild");
