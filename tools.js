@@ -4,7 +4,7 @@ const logTypes = {
   blinker:"blinkers",
   joint:"joints",
   bong:"bongs",
-  edible:"edible",
+  edible:"edibles",
   vape:"vapes"
 };
 
