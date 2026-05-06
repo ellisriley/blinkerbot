@@ -19,11 +19,31 @@ module.exports = {
     async execute(interaction) {
         const category = interaction.options.getString("category");
         const records = await db.query("SELECT * FROM scores ORDER BY " + category +" DESC LIMIT 6;");
-        console.log(records);
+        //console.log(records);
         let response = "";
         for (record in records) {
             let displayName = await tools.getMemberDisplayNameFromId(interaction, records[record].userId);
-            response = response + record + ". " + displayName + ": " + records[record][category] + " " + category +"\n"; 
+            
+            switch (record) {
+                case "0":
+                    response = response + "🥇. " + displayName + ": " + records[record][category] + " " + category +"\n"; 
+                    
+                    break;
+                case "1":
+                    response = response + "🥈. " + displayName + ": " + records[record][category] + " " + category +"\n"; 
+                    break;
+                case "2":
+                    response = response + "🥉. " + displayName + ": " + records[record][category] + " " + category +"\n"; 
+                    break;
+                default:
+                    console.log("default"+record + displayName);
+                    response = response + (parseInt(record) + 1) + ". " + displayName + ": " + records[record][category] + " " + category +"\n";
+                    break;
+            }
+            if (record === 0) {
+
+            }
+             
         }
         await interaction.reply(response);
     },
