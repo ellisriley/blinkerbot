@@ -34,6 +34,10 @@ async function incrementByHalf(userId, field) {
   query("UPDATE scores SET " + field + "=" + field + "+0.5 WHERE userId= \""+userId+"\";");
 }
 
+async function ammend(userId, field, amount) {
+  query("UPDATE scores SET " + field + "=" + field + "+"+amount+" WHERE userId= \""+userId+"\";");
+}
+
 module.exports = {
-  query, getRecordByUserId, doesRecordExist, createRecord, increment, incrementByHalf
+  query, getRecordByUserId, doesRecordExist, createRecord, increment, incrementByHalf, ammend
 }
