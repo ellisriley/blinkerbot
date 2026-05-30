@@ -14,6 +14,7 @@ module.exports = {
                     { name: 'joints', value: 'joints' },
                     { name: 'bongs', value: 'bongs' },
                     { name: 'edibles', value: 'edibles' },
+                    { name: 'vapes', value: "vapes"}
                 ),
         ).addIntegerOption(option =>
             option.setName("amount")
