@@ -1,0 +1,13 @@
+[Unit]
+Description=Blinky Discord bot
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=riley
+ExecStart=node /home/riley/blinkerbot/main.js
+
+[Install]
+WantedBy=multi-user.target
