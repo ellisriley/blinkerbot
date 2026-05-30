@@ -36,7 +36,7 @@ module.exports = {
                     response = response + "🥉. " + displayName + ": " + records[record][category] + " " + category +"\n"; 
                     break;
                 default:
-                    console.log("default"+record + displayName);
+                    //console.log("default"+record + displayName);
                     response = response + (parseInt(record) + 1) + ". " + displayName + ": " + records[record][category] + " " + category +"\n";
                     break;
             }
