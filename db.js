@@ -38,6 +38,10 @@ async function ammend(userId, field, amount) {
   query("UPDATE scores SET " + field + "=" + field + "+"+amount+" WHERE userId= \""+userId+"\";");
 }
 
+async function getMilestoneResponses() {
+  return await query("SELECT * FROM responses;");
+}
+
 module.exports = {
-  query, getRecordByUserId, doesRecordExist, createRecord, increment, incrementByHalf, ammend
+  query, getRecordByUserId, doesRecordExist, createRecord, increment, incrementByHalf, ammend, getMilestoneResponses
 }
