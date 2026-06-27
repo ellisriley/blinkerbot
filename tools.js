@@ -1,13 +1,20 @@
 const { GuildMember, CommandInteraction} = require('discord.js');
-const db = require("./db.js");
 
 const logTypes = {
-  blinker:"blinkers",
-  joint:"joints",
-  bong:"bongs",
-  edible:"edibles",
-  vape:"vapes"
+  blinker:"Blinker",
+  joint:"Joint",
+  bong:"Bong",
+  edible:"Edible",
+  vape:"Vape"
 };
+
+
+async function createLogTypesArray() {
+  const logTypesFromDb = await db.getTypes();
+  for (row in logTypesFromDb) {
+    console.log(row.type_description);
+  }
+}
 
 async function getMemberDisplayNameFromId(interaction, userId) {
     if (!interaction.guild) {
@@ -55,4 +62,4 @@ async function generateResponse(category, amount, nickname) {
   return responseString;
 }
 
-module.exports = {getMemberDisplayNameFromId, logTypes, generateResponse}
+module.exports = {getMemberDisplayNameFromId, logTypes, generateResponse, createLogTypesArray}
