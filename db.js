@@ -48,17 +48,17 @@ async function checkUserSafe(interaction, userId) {
 async function createLogRecord(interaction, userId, logType){
   const logTime = Math.floor(new Date().getTime() / 1000);
   await checkUserSafe(interaction, userId);
-  console.log(logType);
   const resCreate = await query(`INSERT INTO `+dbconf.schema+`.logs(user_id, log_time, log_type) VALUES ((SELECT user_id FROM `+dbconf.schema+`.users WHERE user_discord_id=`+userId+`), `+logTime+`, (SELECT type_id FROM `+dbconf.schema+`.types WHERE type_description='`+logType+`'));`);
   return resCreate;
 }
 
 async function getCurrentAmount(userId, type) {
-  const value = await query(`SELECT * FROM `+dbconf.schema+`.logs WHERE user_id=(SELECT user_id FROM `+dbconf.schema+`.users WHERE user_discord_id=`+userId+`) AND log_type=(SELECT type_id FROM `+dbconf.schema+`.types WHERE type_description=`+type+`);`);
+  const res = await query(`SELECT * FROM `+dbconf.schema+`.logs WHERE user_id=(SELECT user_id FROM `+dbconf.schema+`.users WHERE user_discord_id=`+userId+`) AND log_type=(SELECT type_id FROM `+dbconf.schema+`.types WHERE type_description='`+type+`');`);
+  return res.rowCount;
 }
 
 async function getRecordByUserId(userId) {
   const res = await query();
 } 
 
-module.exports = { query , getRecordByUserId, doesUserExist, createUserRecord, createLogRecord } 
+module.exports = { query , getRecordByUserId, doesUserExist, createUserRecord, createLogRecord, getCurrentAmount } 
