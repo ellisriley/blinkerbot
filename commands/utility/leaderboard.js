@@ -31,29 +31,35 @@ module.exports = {
         const timeframe = interaction.options.getString("time");
         const records = await db.getOverallLeaderboardByTypeAndTime(category, timeframe);
         //console.log(records);
-        let response = "";
+        let response = "Leaderboard for " + timeframe+"\n";
         let number = 0
-        for (record of records.rows) {
-            //console.log(record);
-            let displayName = await tools.getMemberDisplayNameFromId(interaction, await db.getDiscordIdByRecordUserId(record.user_id));
-            number++;
-            switch (number) {
-                case 1:
-                    response = response + "🥇. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
-                    
-                    break;
-                case 2:
-                    response = response + "🥈. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
-                    break;
-                case 3:
-                    response = response + "🥉. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
-                    break;
-                default:
-                    //console.log("default"+record + displayName);
-                    response = response + (parseInt(record) + 1) + ". " + displayName + ": " + record.log_count + " " + category +"s\n";
-                    break;
-            }     
-    }
-        await interaction.reply(response);
+        if (records.rowCount > 0){
+            for (record of records.rows) {
+                //console.log(record);
+                let displayName = await tools.getMemberDisplayNameFromId(interaction, await db.getDiscordIdByRecordUserId(record.user_id));
+                number++;
+                switch (number) {
+                    case 1:
+                        response = response + "🥇. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
+                        
+                        break;
+                    case 2:
+                        response = response + "🥈. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
+                        break;
+                    case 3:
+                        response = response + "🥉. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
+                        break;
+                    default:
+                        //console.log("default"+record + displayName);
+                        response = response + number + ". " + displayName + ": " + record.log_count + " " + category +"s\n";
+                        break;
+                }     
+            }
+            await interaction.reply(response);
+        } 
+        else {
+            await interaction.reply("No data is available for the timeframe "+ timeframe + " yet!");
+        }
+       
     },
 };
