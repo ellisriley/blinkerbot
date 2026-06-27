@@ -20,6 +20,7 @@ module.exports = {
         const userId = interaction.user.id;
         const category = interaction.options.getString("category");
         const result = await db.createLogRecord(interaction, userId, category);
-        interaction.reply("Success"); 
+        interaction.reply(await tools.generateResponse(category, await db.getCurrentAmount(userId, category), await tools.getMemberDisplayNameFromId(interaction, userId))); 
+        //interaction.reply("fg");
     },
 };
