@@ -29,7 +29,7 @@ module.exports = {
     async execute(interaction) {
         const category = interaction.options.getString("category");
         const timeframe = interaction.options.getString("time");
-        const records = await db.getOverallLeaderboardByType(category);
+        const records = await db.getOverallLeaderboardByTypeAndTime(category, timeframe);
         //console.log(records);
         let response = "";
         let number = 0
@@ -52,12 +52,8 @@ module.exports = {
                     //console.log("default"+record + displayName);
                     response = response + (parseInt(record) + 1) + ". " + displayName + ": " + record.log_count + " " + category +"\n";
                     break;
-            }
-            if (record === 0) {
-
-            }
-             
-        }
+            }     
+    }
         await interaction.reply(response);
     },
 };
