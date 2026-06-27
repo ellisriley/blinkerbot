@@ -5,8 +5,9 @@ const tools = require("../../tools.js");
 module.exports = {
 	data: new SlashCommandBuilder().setName('pgtest').setDescription('get your score'),
 	async execute(interaction) {
-		let response = await db.getRecordByUserId("0");
-
-		await interaction.reply(response);
-	},
+		const userId = interaction.user.id;
+		let response = await db.createLogRecord(interaction, userId, 'Blinker');
+		console.log(response);
+		await interaction.reply("executed");
+	}, 
 };
