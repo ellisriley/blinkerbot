@@ -39,18 +39,18 @@ module.exports = {
             number++;
             switch (number) {
                 case 1:
-                    response = response + "🥇. " + displayName + ": " + record.log_count + " " + category +"\n"; 
+                    response = response + "🥇. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
                     
                     break;
                 case 2:
-                    response = response + "🥈. " + displayName + ": " + record.log_count + " " + category +"\n"; 
+                    response = response + "🥈. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
                     break;
                 case 3:
-                    response = response + "🥉. " + displayName + ": " + record.log_count + " " + category +"\n"; 
+                    response = response + "🥉. " + displayName + ": " + record.log_count + " " + category +"s\n"; 
                     break;
                 default:
                     //console.log("default"+record + displayName);
-                    response = response + (parseInt(record) + 1) + ". " + displayName + ": " + record.log_count + " " + category +"\n";
+                    response = response + (parseInt(record) + 1) + ". " + displayName + ": " + record.log_count + " " + category +"s\n";
                     break;
             }     
     }
