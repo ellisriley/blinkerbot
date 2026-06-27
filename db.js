@@ -15,8 +15,12 @@ const pool = new pg.Pool({
   password: dbconf.password,
   port: dbconf.port,
 });
+pool.on('connect', async (client) => {
+    await client.query(`SET search_path TO ${dbconf.schema}`);
+});
 
 async function query(sql){
+  //console.log(sql);
   const client = await pool.connect();
   const res = await client.query(sql);
   client.release();
@@ -61,4 +65,33 @@ async function getRecordByUserId(userId) {
   const res = await query();
 } 
 
-module.exports = { query , getRecordByUserId, doesUserExist, createUserRecord, createLogRecord, getCurrentAmount } 
+async function getDiscordIdByRecordUserId(userId) {
+  const res = await query(`
+    SELECT user_discord_id FROM users WHERE user_id=`+userId+`;`
+  );
+  return res.rows[0].user_discord_id;
+}
+
+async function getOverallLeaderboardByType(type){
+  const resLeaderboardList = await query(`
+    SELECT
+        user_id,
+        COUNT(*) AS log_count
+    FROM logs
+    WHERE log_type = (SELECT type_id FROM types WHERE type_description='`+type+`')
+    GROUP BY user_id
+    ORDER BY log_count DESC, user_id;`
+  );
+  return resLeaderboardList;
+}
+
+module.exports = { 
+  query,
+  getRecordByUserId,
+  doesUserExist,
+  createUserRecord,
+  createLogRecord,
+  getCurrentAmount,
+  getOverallLeaderboardByType,
+  getDiscordIdByRecordUserId
+} 
