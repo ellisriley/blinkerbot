@@ -3,10 +3,10 @@ const path = require('node:path');
 const tools = require('./tools.js');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { token } = require('./config.json');
-//const db = require("./db.js")
+const db = require("./db.js")
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 console.log("Starting");
 client.once(Events.ClientReady, (readyClient) => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
@@ -56,6 +56,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			});
 		}
 	}
+});
+client.on(Events.MessageCreate, async (message) => {
+    if (message.author.bot) return;
+
+    try {
+        const result = await db.incrementChatScore(message);
+
+        if (result.levelUp) {
+            await message.channel.send({
+                content: `🎉 Congratulations ${message.author}! You reached **Chat Level ${result.newLevel}**!`
+            });
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 client.login(token);

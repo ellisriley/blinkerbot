@@ -93,6 +93,92 @@ async function getOverallLeaderboardByTypeAndTime(type, timeframe){
   return resLeaderboardList;
 }
 
+async function incrementChatScore(message) {
+    await checkUserSafe(message, message.author.id);
+
+    const client = await pool.connect();
+
+    try {
+        await client.query("BEGIN");
+        const userResult = await client.query(
+            `SELECT user_id
+             FROM users
+             WHERE user_discord_id = $1`,
+            [message.author.id]
+        );
+
+        const userId = userResult.rows[0].user_id;
+
+        let scoreResult = await client.query(
+            `SELECT chat_score, messages_sent, progress
+             FROM chatscores
+             WHERE user_id = $1
+             FOR UPDATE`,
+            [userId]
+        );
+
+        if (scoreResult.rows.length === 0) {
+            await client.query(
+                `INSERT INTO chatscores
+                (user_id, chat_score, messages_sent, progress)
+                VALUES ($1, 0, 0, 0)`,
+                [userId]
+            );
+
+            scoreResult = {
+                rows: [{
+                    chat_score: 0,
+                    messages_sent: 0,
+                    progress: 0
+                }]
+            };
+        }
+
+        let level = scoreResult.rows[0].chat_score;
+        let messagesSent = scoreResult.rows[0].messages_sent;
+        let progress = scoreResult.rows[0].progress;
+
+        messagesSent++;
+        progress++;
+
+        const required = 10 * Math.pow(1.5, level);
+
+        let levelUp = false;
+
+        if (progress >= required) {
+            level++;
+            progress = 0;
+            levelUp = true;
+        }
+
+        await client.query(
+            `UPDATE chatscores
+             SET
+                chat_score = $1,
+                messages_sent = $2,
+                progress = $3
+             WHERE user_id = $4`,
+            [level, messagesSent, progress, userId]
+        );
+
+        await client.query("COMMIT");
+
+        return {
+            levelUp,
+            newLevel: level,
+            progress,
+            required,
+            messagesSent
+        };
+
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = { 
   query,
   getRecordByUserId,
@@ -101,5 +187,6 @@ module.exports = {
   createLogRecord,
   getCurrentAmount,
   getOverallLeaderboardByTypeAndTime,
-  getDiscordIdByRecordUserId
+  getDiscordIdByRecordUserId,
+  incrementChatScore
 } 
