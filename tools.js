@@ -51,14 +51,15 @@ async function generateResponse(category, amount, nickname) {
       case (logTypes.edible):
         responseString = nickname + " just hit scranned an edible! Current edibles: " + amount;
         break;
-      case (logTypes.bongs):
-        responseString = nickname + " just hit smoked a bong! Current edibles: " + amount;
+      case (logTypes.bong):
+        responseString = nickname + " just smoked a bong! Current bongs: " + amount;
         break;
       case (logTypes.vape):
         responseString = nickname + " just hit hit a vape! Current bowls: " + amount;
         break;
     }
   }
+  console.log(responseString);
   return responseString;
 }
 
