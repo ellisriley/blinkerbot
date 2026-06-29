@@ -179,6 +179,43 @@ async function incrementChatScore(message) {
     }
 }
 
+async function addSelfRole(roleId) {
+    await pool.query(
+        `INSERT INTO self_roles (role_id)
+         VALUES ($1)
+         ON CONFLICT (role_id) DO NOTHING`,
+        [roleId]
+    );
+}
+
+async function removeSelfRole(roleId) {
+    await pool.query(
+        `DELETE FROM self_roles
+         WHERE role_id = $1`,
+        [roleId]
+    );
+}
+
+async function getSelfRoles() {
+    const result = await pool.query(
+        `SELECT role_id
+         FROM self_roles`
+    );
+
+    return result.rows;
+}
+
+async function isSelfRole(roleId) {
+    const result = await pool.query(
+        `SELECT 1
+         FROM self_roles
+         WHERE role_id = $1`,
+        [roleId]
+    );
+
+    return result.rows.length > 0;
+}
+
 module.exports = { 
   query,
   getRecordByUserId,
@@ -188,5 +225,9 @@ module.exports = {
   getCurrentAmount,
   getOverallLeaderboardByTypeAndTime,
   getDiscordIdByRecordUserId,
-  incrementChatScore
+  incrementChatScore,
+  addSelfRole,
+  removeSelfRole,
+  isSelfRole,
+  getSelfRoles
 } 
