@@ -34,7 +34,19 @@ for (const folder of commandFolders) {
 
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isChatInputCommand()) return; 
+    
+	if (interaction.isAutocomplete()) {
+
+		const command = interaction.client.commands.get(interaction.commandName);
+
+		if (!command || !command.autocomplete)
+			return;
+
+		return command.autocomplete(interaction);
+		
+	}
+	
+	if (!interaction.isChatInputCommand()) return; 
 	const command = interaction.client.commands.get(interaction.commandName);
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
@@ -59,6 +71,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 client.on(Events.MessageCreate, async (message) => {
     if (message.author.bot) return;
+
 
     try {
         const result = await db.incrementChatScore(message);
