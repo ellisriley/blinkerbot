@@ -1,6 +1,6 @@
 {
   "name": "blinkerbot",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "blinker counter bot for smonk 2.1",
   "main": "main.js",
   "scripts": {

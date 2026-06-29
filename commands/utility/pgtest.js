@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const db = require("../../db.js");
 const dbconf = require("../../db.json");
 const tools = require("../../tools.js");
+const pkg = require("../../package.json");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName('pgtest').setDescription('get your score'),
@@ -9,7 +10,7 @@ module.exports = {
 		const userId = interaction.user.id;
 		let response = await db.query(`select * from info;`);
 		let responseMessage = '';
-		responseMessage = responseMessage + 'Version: ' + response.rows[0].ver + '\n';
+		responseMessage = responseMessage + 'Version: ' + pkg.version + '\n';
 		responseMessage = responseMessage + 'Build: ' + response.rows[0].build + '\n';
 		responseMessage = responseMessage + 'Database Server: ' + dbconf.host + '\n';
 		responseMessage = responseMessage + 'Schema: ' + dbconf.schema + '\n';
