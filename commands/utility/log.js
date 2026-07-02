@@ -15,11 +15,22 @@ module.exports = {
                     { name: 'edible', value: tools.logTypes.edible },
                     { name: 'vape', value: tools.logTypes.vape }
 				)
-		),
+		).addIntegerOption((option) => option
+                .setName('amount')
+                .setDescription('amount of logs to create')
+                .setRequired(false)
+            ),
     async execute(interaction) {
         const userId = interaction.user.id;
         const category = interaction.options.getString("category");
-        const result = await db.createLogRecord(interaction, userId, category);
+        const amount = interaction.options.getInteger('amount')||1;
+        let result;
+        //console.log(amount);
+        if (amount === 1) {
+            result = await db.createLogRecord(interaction, userId, category);
+        } else {
+            result = await db.createMultipleLogRecords(interaction, userId, category, amount);
+        }
         interaction.reply(await tools.generateResponse(category, await db.getCurrentAmount(userId, category), await tools.getMemberDisplayNameFromId(interaction, userId))); 
         //interaction.reply("fg");
     },
