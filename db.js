@@ -56,6 +56,26 @@ async function createLogRecord(interaction, userId, logType){
   return resCreate;
 }
 
+async function createMultipleLogRecords(interaction, userId, logType, amount){
+  const logTime = Math.floor(new Date().getTime() / 1000);
+  await checkUserSafe(interaction, userId);
+  const client = await pool.connect();
+  const resCreate = await client.query(`
+    INSERT INTO logs (
+        log_time,
+        user_id,
+        log_type
+    )
+    SELECT
+        EXTRACT(EPOCH FROM (NOW() - (gs.n * INTERVAL '1 hour')))::BIGINT,
+        (SELECT user_id FROM users WHERE user_discord_id=$1),          
+        (SELECT type_id FROM types WHERE type_description = $2)           
+    FROM generate_series(1, $3) AS gs(n);  
+    `,[userId, logType, amount]
+    );
+  return resCreate;
+}
+
 async function getCurrentAmount(userId, type) {
   const res = await query(`SELECT * FROM logs WHERE user_id=(SELECT user_id FROM users WHERE user_discord_id=`+userId+`) AND log_type=(SELECT type_id FROM types WHERE type_description='`+type+`');`);
   return res.rowCount;
@@ -141,7 +161,7 @@ async function incrementChatScore(message) {
         messagesSent++;
         progress++;
 
-        const required = 10 * Math.pow(1.5, level);
+        const required = 10 * Math.pow(await getConfig('xp_multiplier')||1.2,level);
 
         let levelUp = false;
 
@@ -216,6 +236,63 @@ async function isSelfRole(roleId) {
     return result.rows.length > 0;
 }
 
+async function setConfig(name, value) {
+    await pool.query(
+        `UPDATE config
+         SET val = $2
+         WHERE name = $1`,
+        [name, value.toString()]
+    );
+}
+async function getConfig(name) {
+    const result = await pool.query(
+        `SELECT val
+         FROM config
+         WHERE name = $1`,
+        [name]
+    );
+
+    if (result.rows.length === 0)
+        return null;
+
+    return result.rows[0].val;
+}
+async function getAllConfig() {
+    const result = await pool.query(
+        `SELECT variable_name, val
+         FROM config`
+    );
+
+    return result.rows;
+}
+async function deleteConfig(variableName) {
+    await pool.query(
+        `DELETE FROM config
+         WHERE variable_name = $1`,
+        [variableName]
+    );
+}
+async function getConfigByType(type) {
+    const result = await pool.query(
+        `SELECT name, description
+         FROM config
+         WHERE value_type = $1
+         ORDER BY name`,
+        [type]
+    );
+
+    return result.rows;
+}
+async function messageHasBeenStarred(messageId) {
+  const result = await pool.query(`SELECT * FROM starred_messages WHERE message_id=$1`, [messageId]);
+  //console.log(result);
+  return result.rowCount > 0;
+}
+async function addStarredMessage(messageId) {
+  const result = await pool.query(`INSERT INTO starred_messages(message_id) VALUES ($1)`, [messageId]);
+  return result.rows;
+}
+
 module.exports = { 
   query,
   getRecordByUserId,
@@ -229,5 +306,13 @@ module.exports = {
   addSelfRole,
   removeSelfRole,
   isSelfRole,
-  getSelfRoles
+  getSelfRoles,
+  setConfig,
+  getConfig,
+  getConfigByType,
+  getAllConfig,
+  deleteConfig,
+  messageHasBeenStarred,
+  addStarredMessage,
+  createMultipleLogRecords
 } 
