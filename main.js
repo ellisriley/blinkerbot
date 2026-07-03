@@ -1,12 +1,16 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const tools = require('./tools.js');
-const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, MessageFlags, Partials } = require('discord.js');
 const { token } = require('./config.json');
 const db = require("./db.js")
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent,GatewayIntentBits.GuildMessageReactions],partials: [
+        Partials.Message,
+        Partials.Channel,
+        Partials.Reaction
+    ] });
 console.log("Starting");
 client.once(Events.ClientReady, (readyClient) => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
@@ -86,5 +90,21 @@ client.on(Events.MessageCreate, async (message) => {
         console.error(err);
     }
 });
+
+const eventsPath = path.join(__dirname, "events");
+const eventFiles = fs.readdirSync(eventsPath)
+    .filter(file => file.endsWith(".js"));
+
+for (const file of eventFiles) {
+    const event = require(`./events/${file}`);
+
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args));
+    }
+
+    console.log(`Loaded event: ${event.name}`);
+}
 
 client.login(token);
